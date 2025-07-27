@@ -1,0 +1,114 @@
+body {
+  background: #e9ecef;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #343a40;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.card-custom {
+  border-radius: 1.2rem;
+  box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.12);
+  background: #fff;
+  padding: 2.5rem 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-custom:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 1.2rem 2.4rem rgba(0, 0, 0, 0.18);
+}
+
+h3 {
+  font-weight: 700;
+  font-size: 2rem;
+  color: #0d6efd; /* azul Bootstrap */
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 1px 2px rgba(13, 110, 253, 0.25);
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select.form-select {
+  border-radius: 0.6rem;
+  border: 1.5px solid #ced4da;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  background: #fefefe;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="file"]:focus,
+select.form-select:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 8px rgba(13, 110, 253, 0.35);
+  background: #fff;
+}
+
+#nomeArquivoBase{
+    margin-bottom: 10px;
+}
+
+.d-grid .btn {
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 0.7rem;
+  padding: 0.8rem 1.2rem;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0.4rem 0.8rem rgba(13, 110, 253, 0.3);
+}
+
+.d-grid .btn:hover {
+  background-color: #0b5ed7;
+  box-shadow: 0 0.6rem 1.2rem rgba(11, 94, 215, 0.45);
+}
+
+.table-responsive {
+  margin-top: 2rem;
+  border-radius: 0.7rem;
+  overflow: hidden;
+  box-shadow: 0 0.4rem 1rem rgba(0,0,0,0.08);
+}
+
+table.table {
+  border-radius: 0.7rem;
+  overflow: hidden;
+ 
+}
+
+.table thead {
+  background-color: #0d6efd;
+  color: white;
+  font-weight: 700;
+}
+
+.table tbody tr:hover {
+  background-color: #dbe9ff;
+  transition: background-color 0.3s ease;
+}
+
+@media (max-width: 576px) {
+  h3 {
+    font-size: 1.5rem;
+  }
+  
+  .card-custom {
+    padding: 1.5rem 1rem;
+  }
+}

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Relatório de Linhas Offline</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    /* Fonte base */
+    body {
+      background: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #343a40;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+    }
+
+    /* Card */
+    .card {
+      border-radius: 1rem;
+      box-shadow:
+        0 0.5rem 1rem rgba(0,0,0,0.15),
+        0 0.125rem 0.25rem rgba(0,0,0,0.1);
+      background: #fff;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+    .card:hover {
+      box-shadow:
+        0 1rem 2rem rgba(0,0,0,0.25),
+        0 0.25rem 0.5rem rgba(0,0,0,0.15);
+    }
+
+    /* Header */
+    h3 {
+      font-weight: 700;
+      font-size: 1.9rem;
+      color: #0d6efd;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    h3 i {
+      font-size: 2.2rem;
+      color: #0d6efd;
+    }
+
+    /* File input customizado */
+    input[type="file"] {
+      cursor: pointer;
+      border: 2px dashed #0d6efd;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      background: #e9f0ff;
+      transition: background-color 0.3s ease;
+    }
+    input[type="file"]:hover {
+      background: #d0e2ff;
+    }
+
+    /* Botão exportar */
+    #exportBtn {
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.75rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 0.4rem 0.8rem rgba(13, 110, 253, 0.4);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    #exportBtn:disabled {
+      background-color: #6c757d !important;
+      box-shadow: none !important;
+      cursor: not-allowed;
+    }
+    #exportBtn:not(:disabled):hover {
+      background-color: #0b5ed7;
+      box-shadow: 0 0.6rem 1.2rem rgba(13, 110, 253, 0.6);
+    }
+    #exportBtn i {
+      margin-right: 0.5rem;
+      font-size: 1.3rem;
+      vertical-align: middle;
+    }
+
+    /* Tabela */
+    .table {
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow:
+        0 0.25rem 0.5rem rgba(0,0,0,0.1);
+      background: #fff;
+    }
+    thead.table-light {
+      background-color: #0d6efd;
+      color: white;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    thead.table-light th {
+      border-bottom: none;
+      white-space: nowrap;
+    }
+    tbody tr:nth-child(odd) {
+      background-color: #f1f5fb;
+    }
+    tbody tr:hover {
+      background-color: #cfe2ff;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .table th, .table td {
+      vertical-align: middle;
+      white-space: nowrap;
+      padding: 0.75rem 1rem;
+    }
+
+    /* Scroll horizontal suave */
+    .table-responsive {
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      box-shadow: inset 0 0 10px rgb(0 0 0 / 0.05);
+    }
+
+    /* Responsividade */
+    @media (max-width: 575.98px) {
+      h3 {
+        font-size: 1.5rem;
+        justify-content: center;
+      }
+      h3 i {
+        font-size: 1.7rem;
+      }
+      .table th, .table td {
+        padding: 0.5rem 0.4rem;
+        font-size: 0.85rem;
+      }
+      #exportBtn {
+        font-size: 1rem;
+        padding: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card p-4">
+        <h3><i class="bi bi-file-earmark-spreadsheet"></i> Relatório de Linhas Offline</h3>
+
+        <div class="mb-3">
+          <label for="fileInput" class="form-label fw-semibold">Selecione o arquivo CSV (.csv):</label>
+          <input class="form-control" type="file" id="fileInput" accept=".csv" />
+        </div>
+
+        <div class="d-grid mb-3">
+          <button class="btn btn-success" id="exportBtn" disabled>
+            <i class="bi bi-file-earmark-spreadsheet-fill"></i> Exportar XLSX
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered" id="outputTable">
+            <thead class="table-light">
+              <tr>
+                <th>ICCID</th>
+                <th>MSISDN</th>
+                <th>Último Acesso</th>
+                <th>Operadora</th>
+                <th>Rede</th>
+                <th>Conexão</th>
+                <th>Dias Offline</th>
+                <th>Probabilidade de Ficar Online</th>
+              </tr>
+            </thead>
+            <tbody id="outputBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Biblioteca SheetJS para exportar XLSX -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+  let linhasOffline = [];
+  let nomeArquivoBase = "relatorio_linhas_offline";
+
+  document.getElementById('fileInput').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const texto = event.target.result;
+
+      // Define nomeArquivoBase pegando primeira coluna da segunda linha
+      definirNomeArquivoBase(texto);
+
+      processarCSV(texto);
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', exportarXLSX);
+
+  function definirNomeArquivoBase(texto) {
+    const linhas = texto.split("\n").filter(l => l.trim() !== "");
+    if (linhas.length < 2) {
+      nomeArquivoBase = "relatorio_linhas_offline";
+      return;
+    }
+    const segundaLinha = linhas[1];
+    const colunas = segundaLinha.split(";");
+
+    if (colunas.length < 1) {
+      nomeArquivoBase = "relatorio_linhas_offline";
+      return;
+    }
+
+    let valor = colunas[0].replace(/^['"]|['"]$/g, "").trim();
+    if (!valor) valor = "relatorio_linhas_offline";
+
+    // Remove espaços, substituindo por underscore (opcional)
+    valor = valor.replace(/\s+/g, "_");
+
+    nomeArquivoBase = valor;
+  }
+
+  function processarCSV(texto) {
+    const linhas = texto.split('\n').filter(l => l.trim() !== '');
+    const cabecalho = linhas[0].split(';').map(h => h.trim().replace(/^['"]|['"]$/g, ''));
+
+    const idx = campo => cabecalho.findIndex(c => c.toUpperCase() === campo.toUpperCase());
+
+    const iICCID = idx("ICCID");
+    const iMSISDN = idx("MSISDN");
+    const iUltimo = idx("Último Acesso");
+    const iOperadora = idx("Operadora");
+    const iRede = idx("Rede");
+    const iConexao = idx("Conexão");
+
+    if ([iICCID, iMSISDN, iUltimo, iOperadora, iRede, iConexao].includes(-1)) {
+      alert("Colunas necessárias não encontradas no arquivo.");
+      return;
+    }
+
+    const corpo = document.getElementById('outputBody');
+    corpo.innerHTML = '';
+    linhasOffline = [];
+
+    for (let i = 1; i < linhas.length; i++) {
+      const colunas = linhas[i].split(';');
+      if (colunas.length < cabecalho.length) continue;
+
+      const iccid = limpar(colunas[iICCID]);
+      const msisdn = limpar(colunas[iMSISDN]);
+      const ultimo = limpar(colunas[iUltimo]);
+      const operadora = limpar(colunas[iOperadora]);
+      const rede = limpar(colunas[iRede]);
+      const conexao = limpar(colunas[iConexao]);
+
+      if (conexao.toLowerCase() !== 'offline') continue;
+
+      const diasOffline = calcularDiasOffline(ultimo);
+      if (diasOffline === '-' || diasOffline < 0) continue;
+
+      const probabilidade = calcularProbabilidade(diasOffline);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${iccid}</td>
+        <td>${msisdn}</td>
+        <td>${ultimo}</td>
+        <td>${operadora}</td>
+        <td>${rede}</td>
+        <td>${conexao}</td>
+        <td>${diasOffline}</td>
+        <td>${probabilidade}</td>
+      `;
+      corpo.appendChild(tr);
+
+      linhasOffline.push({
+        ICCID: iccid,
+        MSISDN: msisdn,
+        "Último Acesso": ultimo,
+        Operadora: operadora,
+        Rede: rede,
+        Conexão: conexao,
+        "Dias Offline": diasOffline,
+        "Probabilidade de Ficar Online": probabilidade
+      });
+    }
+
+    document.getElementById('exportBtn').disabled = linhasOffline.length === 0;
+  }
+
+  function limpar(texto) {
+    return texto?.replace(/^['"]|['"]$/g, '').trim() || '';
+  }
+
+  function calcularDiasOffline(dataTexto) {
+    if (!dataTexto) return '-';
+
+    const match = dataTexto.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (!match) return '-';
+
+    const [_, dia, mes, ano] = match.map(Number);
+    if (!dia || !mes || !ano) return '-';
+
+    const dataUltimo = new Date(ano, mes - 1, dia);
+    const hoje = new Date();
+    dataUltimo.setHours(0, 0, 0, 0);
+    hoje.setHours(0, 0, 0, 0);
+
+    const diffMs = hoje - dataUltimo;
+    const dias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    return dias >= 0 ? dias : '-';
+  }
+
+  function calcularProbabilidade(diasOffline) {
+    if (typeof diasOffline !== 'number' || diasOffline < 0) return '-';
+
+    if (diasOffline <= 10) return 'Alta';
+    if (diasOffline <= 15) return 'Média';
+    return 'Baixa';
+  }
+
+  function exportarXLSX() {
+    if (linhasOffline.length === 0) {
+      alert('Nenhum dado para exportar!');
+      return;
+    }
+
+    const ws = XLSX.utils.json_to_sheet(linhasOffline);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Linhas Offline');
+
+    const timestamp = getTimestamp();
+    const nomeArquivoFinal = `${nomeArquivoBase}_${timestamp}.xlsx`;
+
+    XLSX.writeFile(wb, nomeArquivoFinal);
+  }
+
+  function getTimestamp() {
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, '0');
+
+    const dia = pad(now.getDate());
+    const mes = pad(now.getMonth() + 1);
+    const ano = now.getFullYear();
+
+    const hora = pad(now.getHours());
+    const minuto = pad(now.getMinutes());
+    const segundo = pad(now.getSeconds());
+
+    return `${dia}${mes}${ano}_${hora}${minuto}${segundo}`;
+  }
+</script>
+
+</body>
+</html>
