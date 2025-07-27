@@ -1,1 +1,1 @@
-https://github.com/marcosbws2024/bwsutil2.git
+https://marcosbws2024.github.io/bwsutil2
